@@ -73,23 +73,60 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() 
 	{
 		controller.updateMainController();
-		System.out.println(Joysticks.rightJoyStickx);
+		//System.out.println(Joysticks.rightJoyStickx);
 		testFunctions();
-		if(getControllerDegrees() < 135 && getControllerDegrees() > 45)
+		if(getControllerDegrees() < 90 && getControllerDegrees() > 2)
+		{
+			double speedFactor = (getControllerDegrees() / 100);
+			System.out.println("Left Talon " + getMagnitude());
+			System.out.println("Right Talon " + (getMagnitude()*speedFactor));
+			Motors.leftTalon.set(getMagnitude());
+			Motors.rightTalon.set(-(getMagnitude() * speedFactor));
+		}
+		else if(getControllerDegrees() < 180 && getControllerDegrees() > 90)
+		{
+			double speedFactor = ((getControllerDegrees() - 90) / 100);
+			System.out.println("Right Talon " + (getMagnitude() - 90));
+			System.out.println("Left Talon " + (getMagnitude()*speedFactor));
+			Motors.rightTalon.set(-(getMagnitude()));
+			Motors.leftTalon.set(((getMagnitude()) * speedFactor));
+		}
+		else if(getControllerDegrees() > 180 && getControllerDegrees() < 270)
+		{
+			double speedFactor = ((getControllerDegrees() - 180) / 100);
+			System.out.println("Right Talon " + (getMagnitude() - 90));
+			System.out.println("Left Talon " + (getMagnitude()*speedFactor));
+			Motors.rightTalon.set((getMagnitude()));
+			Motors.leftTalon.set((-(getMagnitude()) * speedFactor));
+		}
+		else if(getControllerDegrees() < 360 && getControllerDegrees() > 270)
+		{
+			double speedFactor = ((getControllerDegrees() - 270) / 100);
+			System.out.println("Left Talon " + getMagnitude());
+			System.out.println("Right Talon " + (getMagnitude()*speedFactor));
+			Motors.leftTalon.set(-getMagnitude());
+			Motors.rightTalon.set((getMagnitude() * speedFactor));
+		}
+		else if(getControllerDegrees() == 90)
 		{
 			moveForward(getMagnitude());
 		}
-		else if(getControllerDegrees() < 315 && getControllerDegrees() > 225)
+		else if(getControllerDegrees() == 270)
 		{
-			moveForward(getMagnitude());
+			moveBackward(getMagnitude());
 		}
-		else if(getControllerDegrees() < 225 && getControllerDegrees() > 135)
+		else if(getControllerDegrees() == 180)
 		{
 			moveLeft(getMagnitude());
 		}
-		else if(getControllerDegrees() < 45 && getControllerDegrees() > 315)
+		else if(getControllerDegrees() < 2 || getControllerDegrees() > 358)
 		{
 			moveRight(getMagnitude());
+		}
+		else
+		{
+			Motors.leftTalon.set(0);
+			Motors.rightTalon.set(0);
 		}
 		
 	}
@@ -165,7 +202,7 @@ public class Robot extends IterativeRobot {
 		double magnitude =  getMagnitude();
 		double angle = getControllerDegrees();
 		
-		System.out.println("Magnitude: " + magnitude + "; " + "Angle: " + angle + ";");
+		//System.out.println("Magnitude: " + magnitude + "; " + "Angle: " + angle + ";");
 	}
 
 	/**
